@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ByteHire - Sign Up / Login</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@1.9.0"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap');
+        
+        :root {
+            --matrix-green: #00ff41;
+            --matrix-dark-green: #008f11;
+            --matrix-black: #0d0208;
+        }
+        
+        body {
+            font-family: 'Source Code Pro', monospace;
+            background-color: var(--matrix-black);
+            color: var(--matrix-green);
+        }
+        
+        .matrix-bg {
+            background-color: var(--matrix-black);
+        }
+        
+        .matrix-text {
+            color: var(--matrix-green);
+        }
+        
+        .matrix-dark-text {
+            color: var(--matrix-dark-green);
+        }
+        
+        .matrix-border {
+            border-color: var(--matrix-green);
+        }
+        
+        .matrix-glow {
+            text-shadow: 0 0 5px var(--matrix-green), 0 0 10px var(--matrix-green);
+        }
+        
+        .matrix-box-shadow {
+            box-shadow: 0 0 10px var(--matrix-green);
+        }
+        
+        .matrix-input {
+            background-color: rgba(0, 20, 0, 0.2);
+            border: 1px solid var(--matrix-green);
+            color: var(--matrix-green);
+            padding: 0.75rem;
+            width: 100%;
+            border-radius: 0.25rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .matrix-input:focus {
+            box-shadow: 0 0 0 2px var(--matrix-green);
+        }
+        
+        .matrix-input::placeholder {
+            color: rgba(0, 255, 65, 0.5);
+        }
+        
+        .matrix-rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .typing-effect {
+            overflow: hidden;
+            border-right: .15em solid var(--matrix-green);
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: .15em;
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--matrix-green); }
+        }
+        
+        .form-tab.active {
+            border-bottom: 2px solid var(--matrix-green);
+            color: var(--matrix-green);
+            text-shadow: 0 0 5px var(--matrix-green);
+        }
+        
+        .form-tab:not(.active) {
+            color: var(--matrix-dark-green);
+            border-bottom: 2px solid transparent;
+        }
+        
+        .form-container {
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--matrix-green);
+            backdrop-filter: blur(10px);
+        }
+        
+        .error-message {
+            color: #ff3e3e;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body class="matrix-bg min-h-screen flex flex-col">
+    <!-- Matrix Digital Rain Canvas -->
+    <canvas id="matrix-rain" class="matrix-rain"></canvas>
+    
+    <!-- Navigation Bar -->
+    <nav class="border-b matrix-border py-4 px-6 backdrop-filter backdrop-blur-lg bg-opacity-10 bg-black w-full">
+        <div class="container mx-auto">
+            <a href="/"class="text-2xl font-bold matrix-text matrix-glow">ByteHire</a>
+        </div>
+    </nav>
+
+    <!-- Auth Container -->
+    <div class="flex-grow flex items-center justify-center px-4 py-12">
+        <div class="form-container rounded-lg p-8 w-full max-w-md">
+            <!-- Form Header with Tabs -->
+            <div class="flex mb-8 border-b matrix-border">
+                <button id="login-tab" class="form-tab active flex-1 py-3 text-center text-lg font-medium">
+                    Login
+                </button>
+                <button id="signup-tab" class="form-tab flex-1 py-3 text-center text-lg font-medium">
+                    Sign Up
+                </button>
+            </div>
+            
+            <!-- Form Container -->
+            <div id="auth-form-container">
+                <!-- Login Form (Default) -->
+                <form id="login-form" action="/login" method="post">
+                    <h2 class="text-2xl font-bold matrix-text matrix-glow mb-6 text-center">Access the Network</h2>
+                    
+                    <div class="mb-6">
+                        <label for="login-email" class="block matrix-text mb-2">Email</label>
+                        <input 
+                            type="email" 
+                            id="login-email" 
+                            name="email" 
+                            class="matrix-input" 
+                            placeholder="your@email.com" 
+                            required
+                        >
+                        <div class="error-message"></div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="login-password" class="block matrix-text mb-2">Password</label>
+                        <input 
+                            type="password" 
+                            id="login-password" 
+                            name="password" 
+                            class="matrix-input" 
+                            placeholder="••••••••" 
+                            required
+                        >
+                        <div class="error-message"></div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="remember-me" name="remember" class="h-4 w-4 matrix-border bg-transparent">
+                            <label for="remember-me" class="ml-2 matrix-dark-text text-sm">Remember me</label>
+                        </div>
+                        <a href="#" class="text-sm matrix-text hover:matrix-glow">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="w-full border-2 matrix-border matrix-text py-3 rounded-md hover:matrix-glow hover:matrix-box-shadow transition duration-300 text-lg">
+                        Enter the Matrix
+                    </button>
+                    
+                    <div class="mt-6 text-center">
+                        <p class="matrix-dark-text">Don't have an account? 
+                            <a href="#" class="matrix-text hover:matrix-glow" id="switch-to-signup">
+                                Join now
+                            </a>
+                        </p>
+                    </div>
+                </form>
+
+                <!-- Sign Up Form (Hidden by default) -->
+                <form id="signup-form" action="/signup" method="post" style="display: none;">
+                    <h2 class="text-2xl font-bold matrix-text matrix-glow mb-6 text-center">Join the Network</h2>
+                    
+                    <div class="mb-6">
+                        <label for="signup-username" class="block matrix-text mb-2">Username</label>
+                        <input 
+                            type="text" 
+                            id="signup-username" 
+                            name="username" 
+                            class="matrix-input" 
+                            placeholder="hackerman" 
+                            required
+                        >
+                        <div class="error-message"></div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="signup-email" class="block matrix-text mb-2">Email</label>
+                        <input 
+                            type="email" 
+                            id="signup-email" 
+                            name="email" 
+                            class="matrix-input" 
+                            placeholder="your@email.com" 
+                            required
+                        >
+                        <div class="error-message"></div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="signup-password" class="block matrix-text mb-2">Password</label>
+                        <input 
+                            type="password" 
+                            id="signup-password" 
+                            name="password" 
+                            class="matrix-input" 
+                            placeholder="••••••••" 
+                            required
+                        >
+                        <div class="error-message"></div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="signup-confirm-password" class="block matrix-text mb-2">Confirm Password</label>
+                        <input 
+                            type="password" 
+                            id="signup-confirm-password" 
+                            name="confirm_password" 
+                            class="matrix-input" 
+                            placeholder="••••••••" 
+                            required
+                        >
+                        <div class="error-message"></div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block matrix-text mb-2">I am a</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="border matrix-border rounded-md p-3 cursor-pointer hover:matrix-box-shadow transition duration-300" id="client-option">
+                                <input type="radio" id="user-type-client" name="user_type" value="client" class="hidden" required>
+                                <label for="user-type-client" class="flex items-center justify-center cursor-pointer">
+                                    <span class="matrix-text">Client</span>
+                                </label>
+                            </div>
+                            <div class="border matrix-border rounded-md p-3 cursor-pointer hover:matrix-box-shadow transition duration-300" id="developer-option">
+                                <input type="radio" id="user-type-developer" name="user_type" value="developer" class="hidden" required>
+                                <label for="user-type-developer" class="flex items-center justify-center cursor-pointer">
+                                    <span class="matrix-text">Developer</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="terms" name="terms" class="h-4 w-4 matrix-border bg-transparent" required>
+                            <label for="terms" class="ml-2 matrix-dark-text text-sm">
+                                I agree to the <a href="#" class="matrix-text hover:matrix-glow">Terms of Service</a> and <a href="#" class="matrix-text hover:matrix-glow">Privacy Policy</a>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full border-2 matrix-border matrix-text py-3 rounded-md hover:matrix-glow hover:matrix-box-shadow transition duration-300 text-lg">
+                        Create Account
+                    </button>
+                    
+                    <div class="mt-6 text-center">
+                        <p class="matrix-dark-text">Already have an account? 
+                            <a href="#" class="matrix-text hover:matrix-glow" id="switch-to-login">
+                                Login
+                            </a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-6 px-6 border-t matrix-border">
+        <div class="container mx-auto text-center">
+            <div class="matrix-dark-text text-sm">
+                &copy; 2025 ByteHire. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Matrix Digital Rain Effect
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('matrix-rain');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            const matrixGreen = '#00ff41';
+            const characters = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            const fontSize = 14;
+            const columns = canvas.width / fontSize;
+            
+            const drops = [];
+            for (let i = 0; i < columns; i++) {
+                drops[i] = Math.floor(Math.random() * -100);
+            }
+            
+            function draw() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = matrixGreen;
+                ctx.font = fontSize + 'px monospace';
+                
+                for (let i = 0; i < drops.length; i++) {
+                    const text = characters.charAt(Math.floor(Math.random() * characters.length));
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    
+                    drops[i]++;
+                }
+            }
+            
+            setInterval(draw, 33);
+            
+            // Resize canvas when window is resized
+            window.addEventListener('resize', function() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                
+                const newColumns = canvas.width / fontSize;
+                
+                if (newColumns > drops.length) {
+                    for (let i = drops.length; i < newColumns; i++) {
+                        drops[i] = Math.floor(Math.random() * -100);
+                    }
+                }
+            });
+        });
+
+        // Form switching functionality
+        const loginTab = document.getElementById('login-tab');
+        const signupTab = document.getElementById('signup-tab');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const switchToSignup = document.getElementById('switch-to-signup');
+        const switchToLogin = document.getElementById('switch-to-login');
+
+        function showLoginForm() {
+            loginForm.style.display = 'block';
+            signupForm.style.display = 'none';
+            loginTab.classList.add('active');
+            signupTab.classList.remove('active');
+        }
+
+        function showSignupForm() {
+            loginForm.style.display = 'none';
+            signupForm.style.display = 'block';
+            signupTab.classList.add('active');
+            loginTab.classList.remove('active');
+        }
+
+        // Tab click handlers
+        loginTab.addEventListener('click', showLoginForm);
+        signupTab.addEventListener('click', showSignupForm);
+        
+        // Link click handlers
+        switchToSignup.addEventListener('click', function(e) {
+            e.preventDefault();
+            showSignupForm();
+        });
+        
+        switchToLogin.addEventListener('click', function(e) {
+            e.preventDefault();
+            showLoginForm();
+        });
+
+        // Form validation
+        document.getElementById('signup-form').addEventListener('submit', function(e) {
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm-password').value;
+            
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                document.querySelector('#signup-confirm-password + .error-message').textContent = 'Passwords do not match';
+            }
+        });
+
+        // User type selection
+        const clientOption = document.getElementById('client-option');
+        const developerOption = document.getElementById('developer-option');
+        
+        clientOption.addEventListener('click', function() {
+            document.getElementById('user-type-client').checked = true;
+            clientOption.classList.add('matrix-box-shadow');
+            developerOption.classList.remove('matrix-box-shadow');
+        });
+        
+        developerOption.addEventListener('click', function() {
+            document.getElementById('user-type-developer').checked = true;
+            developerOption.classList.add('matrix-box-shadow');
+            clientOption.classList.remove('matrix-box-shadow');
+        });
+    </script>
+</body>
+</html>

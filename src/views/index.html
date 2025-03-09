@@ -1,34 +1,409 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Node + HTMX + Tailwind</title>
-<link href="/public/styles.css" rel="stylesheet">
-<script src="https://unpkg.com/htmx.org@1.9.0"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ByteHire - Decentralized Developer Marketplace</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@1.9.0"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap');
+        
+        :root {
+            --matrix-green: #00ff41;
+            --matrix-dark-green: #008f11;
+            --matrix-black: #0d0208;
+        }
+        
+        body {
+            font-family: 'Source Code Pro', monospace;
+            background-color: var(--matrix-black);
+            color: var(--matrix-green);
+        }
+        
+        .matrix-bg {
+            background-color: var(--matrix-black);
+        }
+        
+        .matrix-text {
+            color: var(--matrix-green);
+        }
+        
+        .matrix-dark-text {
+            color: var(--matrix-dark-green);
+        }
+        
+        .matrix-border {
+            border-color: var(--matrix-green);
+        }
+        
+        .matrix-glow {
+            text-shadow: 0 0 5px var(--matrix-green), 0 0 10px var(--matrix-green);
+        }
+        
+        .matrix-box-shadow {
+            box-shadow: 0 0 10px var(--matrix-green);
+        }
+        
+        .typing-effect {
+            overflow: hidden;
+            border-right: .15em solid var(--matrix-green);
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: .15em;
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--matrix-green); }
+        }
+        
+        .matrix-rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 p-4">
+<body class="matrix-bg min-h-screen">
+    <!-- Matrix Digital Rain Canvas -->
+    <canvas id="matrix-rain" class="matrix-rain"></canvas>
+    
+    <!-- Navigation Bar -->
+    <nav class="border-b matrix-border py-4 px-6 backdrop-filter backdrop-blur-lg bg-opacity-10 bg-black fixed w-full z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center">
+                <span class="text-2xl font-bold matrix-text matrix-glow">ByteHire</span>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#how-it-works" class="matrix-text hover:matrix-glow transition duration-300">How It Works</a>
+                <a href="#features" class="matrix-text hover:matrix-glow transition duration-300">Features</a>
+                <a href="#faq" class="matrix-text hover:matrix-glow transition duration-300">FAQ</a>
+            </div>
+            <div>
+                <button onclick="window.location.href='/signup'" class="border-2 matrix-border matrix-text px-4 py-2 rounded hover:matrix-glow hover:matrix-box-shadow transition duration-300">
+                    Join Now
+                </button>
+            </div>
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="matrix-text">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden absolute top-16 left-0 w-full bg-black bg-opacity-90 border-b matrix-border" hx-get="/mobile-menu" hx-trigger="load once" hx-swap="innerHTML">
+            <div class="container mx-auto py-4 px-6 flex flex-col space-y-4">
+                <a href="#how-it-works" class="matrix-text hover:matrix-glow transition duration-300">How It Works</a>
+                <a href="#features" class="matrix-text hover:matrix-glow transition duration-300">Features</a>
+                <a href="#faq" class="matrix-text hover:matrix-glow transition duration-300">FAQ</a>
+            </div>
+        </div>
+    </nav>
 
-<h1 class="text-2xl font-bold mb-4">User List</h1>
-<div hx-get="/users" hx-trigger="load" hx-target="#user-list">
-    <p>Loading...</p>
-</div>
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-6">
+        <div class="container mx-auto text-center">
+            <h1 class="text-4xl md:text-6xl font-bold matrix-text matrix-glow mb-6">Decentralized Developer Marketplace</h1>
+            <p class="text-xl md:text-2xl matrix-dark-text mb-10 max-w-3xl mx-auto">Hire developers globally with Bitcoin. No restrictions. No limits.</p>
+            <div class="typing-effect text-lg md:text-xl matrix-text max-w-xl mx-auto mb-12">
+                > The future of freelance development is here.
+            </div>
+            <div class="flex flex-col md:flex-row justify-center gap-4">
+                <button onclick="window.location.href='/signup'" class="border-2 matrix-border matrix-text px-6 py-3 rounded-md hover:matrix-glow hover:matrix-box-shadow transition duration-300 text-lg">
+                    Hire Developers
+                </button>
+                <button onclick="window.location.href='/signup'" class="border-2 matrix-border matrix-text px-6 py-3 rounded-md hover:matrix-glow hover:matrix-box-shadow transition duration-300 text-lg">
+                    Become a Developer
+                </button>
+            </div>
+        </div>
+    </section>
 
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-20 px-6 border-t matrix-border">
+        <div class="container mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold matrix-text matrix-glow mb-12 text-center">How ByteHire Works</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div class="border matrix-border p-6 rounded-lg hover:matrix-box-shadow transition duration-300">
+                    <div class="text-4xl matrix-text mb-4">01</div>
+                    <h3 class="text-xl font-bold matrix-text mb-3">Create Your Profile</h3>
+                    <p class="matrix-dark-text">Sign up and create your profile as a client or developer. No age verification or country restrictions.</p>
+                </div>
+                <div class="border matrix-border p-6 rounded-lg hover:matrix-box-shadow transition duration-300">
+                    <div class="text-4xl matrix-text mb-4">02</div>
+                    <h3 class="text-xl font-bold matrix-text mb-3">Connect & Hire</h3>
+                    <p class="matrix-dark-text">Browse developer profiles or post your project. Connect directly with talent worldwide.</p>
+                </div>
+                <div class="border matrix-border p-6 rounded-lg hover:matrix-box-shadow transition duration-300">
+                    <div class="text-4xl matrix-text mb-4">03</div>
+                    <h3 class="text-xl font-bold matrix-text mb-3">Pay with Bitcoin</h3>
+                    <p class="matrix-dark-text">Secure, anonymous payments using Bitcoin. No banks, no middlemen, no restrictions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<p>Loading...</p>
-<p>Loading...</p>
-<p>Loading...</p>
-<p>Loading...</p>
-<p>Loading...</p>
+    <!-- Features Section -->
+    <section id="features" class="py-20 px-6 border-t matrix-border">
+        <div class="container mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold matrix-text matrix-glow mb-12 text-center">Why Choose ByteHire</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="flex items-start space-x-4">
+                    <div class="text-2xl matrix-text">✓</div>
+                    <div>
+                        <h3 class="text-xl font-bold matrix-text mb-2">Global Access</h3>
+                        <p class="matrix-dark-text">No country restrictions. Hire talent from anywhere or work from anywhere.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="text-2xl matrix-text">✓</div>
+                    <div>
+                        <h3 class="text-xl font-bold matrix-text mb-2">Bitcoin Payments</h3>
+                        <p class="matrix-dark-text">Secure, anonymous transactions with low fees and no currency conversion issues.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="text-2xl matrix-text">✓</div>
+                    <div>
+                        <h3 class="text-xl font-bold matrix-text mb-2">No Age Restrictions</h3>
+                        <p class="matrix-dark-text">Young developers can showcase their skills and earn without arbitrary age limits.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="text-2xl matrix-text">✓</div>
+                    <div>
+                        <h3 class="text-xl font-bold matrix-text mb-2">Lower Fees</h3>
+                        <p class="matrix-dark-text">Minimal platform fees compared to traditional freelance marketplaces.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- FAQ Section -->
+    <section id="faq" class="py-20 px-6 border-t matrix-border">
+        <div class="container mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold matrix-text matrix-glow mb-12 text-center">Frequently Asked Questions</h2>
+            <div class="space-y-6 max-w-3xl mx-auto">
+                <div class="border matrix-border p-6 rounded-lg" hx-get="/faq/1" hx-trigger="click" hx-swap="outerHTML">
+                    <div class="flex justify-between items-center cursor-pointer">
+                        <h3 class="text-xl font-bold matrix-text">How do I get started with ByteHire?</h3>
+                        <span class="matrix-text text-xl">+</span>
+                    </div>
+                </div>
+                <div class="border matrix-border p-6 rounded-lg" hx-get="/faq/2" hx-trigger="click" hx-swap="outerHTML">
+                    <div class="flex justify-between items-center cursor-pointer">
+                        <h3 class="text-xl font-bold matrix-text">Is Bitcoin the only payment method?</h3>
+                        <span class="matrix-text text-xl">+</span>
+                    </div>
+                </div>
+                <div class="border matrix-border p-6 rounded-lg" hx-get="/faq/3" hx-trigger="click" hx-swap="outerHTML">
+                    <div class="flex justify-between items-center cursor-pointer">
+                        <h3 class="text-xl font-bold matrix-text">How does ByteHire ensure quality work?</h3>
+                        <span class="matrix-text text-xl">+</span>
+                    </div>
+                </div>
+                <div class="border matrix-border p-6 rounded-lg" hx-get="/faq/4" hx-trigger="click" hx-swap="outerHTML">
+                    <div class="flex justify-between items-center cursor-pointer">
+                        <h3 class="text-xl font-bold matrix-text">What if there's a dispute with a developer?</h3>
+                        <span class="matrix-text text-xl">+</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<div id="user-list" class="mb-4"></div>
+    <!-- CTA Section -->
+    <section class="py-20 px-6 border-t matrix-border">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl md:text-4xl font-bold matrix-text matrix-glow mb-6">Ready to Join the Revolution?</h2>
+            <p class="text-xl matrix-dark-text mb-10 max-w-2xl mx-auto">Break free from traditional hiring constraints. Join ByteHire today and experience the future of developer hiring.</p>
+            <button class="border-2 matrix-border matrix-text px-8 py-4 rounded-md hover:matrix-glow hover:matrix-box-shadow transition duration-300 text-xl">
+                Launch Your Journey
+            </button>
+        </div>
+    </section>
 
-<form action="/users/create" method="post" class="space-y-2">
-    <input name="name" placeholder="Name" class="border p-2 rounded w-full">
-    <input name="email" placeholder="Email" class="border p-2 rounded w-full">
-    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Add User</button>
-</form>
+    <!-- Footer -->
+    <footer class="py-10 px-6 border-t matrix-border">
+        <div class="container mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <span class="text-2xl font-bold matrix-text matrix-glow">ByteHire</span>
+                </div>
+                <div class="flex space-x-6 mb-6 md:mb-0">
+                    <a href="#" class="matrix-text hover:matrix-glow">Terms</a>
+                    <a href="#" class="matrix-text hover:matrix-glow">Privacy</a>
+                    <a href="#" class="matrix-text hover:matrix-glow">Contact</a>
+                </div>
+                <div class="matrix-dark-text">
+                    &copy; 2025 ByteHire. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
 
+    <!-- HTMX Endpoints (would be handled by your Node.js backend) -->
+    <div id="htmx-endpoints" class="hidden">
+        <!-- Mobile Menu Content -->
+        <div id="mobile-menu-content">
+            <div class="container mx-auto py-4 px-6 flex flex-col space-y-4">
+                <a href="#how-it-works" class="matrix-text hover:matrix-glow transition duration-300">How It Works</a>
+                <a href="#features" class="matrix-text hover:matrix-glow transition duration-300">Features</a>
+                <a href="#faq" class="matrix-text hover:matrix-glow transition duration-300">FAQ</a>
+            </div>
+        </div>
+        
+        <!-- FAQ Answers -->
+        <div id="faq-1-answer">
+            <div class="border matrix-border p-6 rounded-lg">
+                <div class="flex justify-between items-center cursor-pointer">
+                    <h3 class="text-xl font-bold matrix-text">How do I get started with ByteHire?</h3>
+                    <span class="matrix-text text-xl">-</span>
+                </div>
+                <div class="mt-4 matrix-dark-text">
+                    Simply create an account, complete your profile, and you can start hiring developers or offering your services immediately. No verification process or approval waiting period.
+                </div>
+            </div>
+        </div>
+        
+        <div id="faq-2-answer">
+            <div class="border matrix-border p-6 rounded-lg">
+                <div class="flex justify-between items-center cursor-pointer">
+                    <h3 class="text-xl font-bold matrix-text">Is Bitcoin the only payment method?</h3>
+                    <span class="matrix-text text-xl">-</span>
+                </div>
+                <div class="mt-4 matrix-dark-text">
+                    Currently, we only support Bitcoin to ensure maximum privacy, security, and global accessibility. We may add other cryptocurrencies in the future based on community demand.
+                </div>
+            </div>
+        </div>
+        
+        <div id="faq-3-answer">
+            <div class="border matrix-border p-6 rounded-lg">
+                <div class="flex justify-between items-center cursor-pointer">
+                    <h3 class="text-xl font-bold matrix-text">How does ByteHire ensure quality work?</h3>
+                    <span class="matrix-text text-xl">-</span>
+                </div>
+                <div class="mt-4 matrix-dark-text">
+                    ByteHire has a robust rating and review system. Clients can view developer portfolios, previous work, and ratings before hiring. We also offer an escrow system for milestone-based payments.
+                </div>
+            </div>
+        </div>
+        
+        <div id="faq-4-answer">
+            <div class="border matrix-border p-6 rounded-lg">
+                <div class="flex justify-between items-center cursor-pointer">
+                    <h3 class="text-xl font-bold matrix-text">What if there's a dispute with a developer?</h3>
+                    <span class="matrix-text text-xl">-</span>
+                </div>
+                <div class="mt-4 matrix-dark-text">
+                    ByteHire offers a dispute resolution system where a neutral third party can review the work and determine a fair outcome. Our escrow system helps protect both parties during the project.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Matrix Digital Rain Effect
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('matrix-rain');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            const matrixGreen = '#00ff41';
+            const characters = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            const fontSize = 14;
+            const columns = canvas.width / fontSize;
+            
+            const drops = [];
+            for (let i = 0; i < columns; i++) {
+                drops[i] = Math.floor(Math.random() * -100);
+            }
+            
+            function draw() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = matrixGreen;
+                ctx.font = fontSize + 'px monospace';
+                
+                for (let i = 0; i < drops.length; i++) {
+                    const text = characters.charAt(Math.floor(Math.random() * characters.length));
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    
+                    drops[i]++;
+                }
+            }
+            
+            setInterval(draw, 33);
+            
+            // Resize canvas when window is resized
+            window.addEventListener('resize', function() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                
+                const newColumns = canvas.width / fontSize;
+                
+                if (newColumns > drops.length) {
+                    for (let i = drops.length; i < newColumns; i++) {
+                        drops[i] = Math.floor(Math.random() * -100);
+                    }
+                }
+            });
+        });
+
+        // HTMX handlers for the FAQ section
+        document.body.addEventListener('htmx:beforeSwap', function(evt) {
+            if (evt.detail.target.id === 'mobile-menu') {
+                evt.detail.shouldSwap = true;
+                evt.detail.target.innerHTML = document.getElementById('mobile-menu-content').innerHTML;
+            }
+            
+            // Handle FAQ answers
+            if (evt.detail.requestConfig.parameters.path === '/faq/1') {
+                evt.detail.shouldSwap = true;
+                evt.detail.serverResponse = document.getElementById('faq-1-answer').innerHTML;
+            }
+            if (evt.detail.requestConfig.parameters.path === '/faq/2') {
+                evt.detail.shouldSwap = true;
+                evt.detail.serverResponse = document.getElementById('faq-2-answer').innerHTML;
+            }
+            if (evt.detail.requestConfig.parameters.path === '/faq/3') {
+                evt.detail.shouldSwap = true;
+                evt.detail.serverResponse = document.getElementById('faq-3-answer').innerHTML;
+            }
+            if (evt.detail.requestConfig.parameters.path === '/faq/4') {
+                evt.detail.shouldSwap = true;
+                evt.detail.serverResponse = document.getElementById('faq-4-answer').innerHTML;
+            }
+        });
+    </script>
 </body>
 </html>
