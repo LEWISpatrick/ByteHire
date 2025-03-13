@@ -13,16 +13,42 @@
             --matrix-green: #00ff41;
             --matrix-dark-green: #008f11;
             --matrix-black: #0d0208;
+            --dark-bg: #121212;
         }
         
         body {
             font-family: 'Source Code Pro', monospace;
-            background-color: var(--matrix-black);
+            background-color: var(--dark-bg);
             color: var(--matrix-green);
+            position: relative;
+            overflow-x: hidden;
         }
         
-        .matrix-bg {
-            background-color: var(--matrix-black);
+        /* Background with subtle grid pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 20, 0, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 20, 0, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: -1;
+        }
+        
+        /* Subtle gradient overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 50, 0, 0.15), rgba(0, 0, 0, 0.4));
+            z-index: -1;
         }
         
         .matrix-text {
@@ -64,35 +90,6 @@
             color: rgba(0, 255, 65, 0.5);
         }
         
-        .matrix-rain {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-        
-        .typing-effect {
-            overflow: hidden;
-            border-right: .15em solid var(--matrix-green);
-            white-space: nowrap;
-            margin: 0 auto;
-            letter-spacing: .15em;
-            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
-        }
-        
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
-        }
-        
-        @keyframes blink-caret {
-            from, to { border-color: transparent }
-            50% { border-color: var(--matrix-green); }
-        }
-        
         .form-tab.active {
             border-bottom: 2px solid var(--matrix-green);
             color: var(--matrix-green);
@@ -105,8 +102,9 @@
         }
         
         .form-container {
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(18, 18, 18, 0.8);
             border: 1px solid var(--matrix-green);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
             backdrop-filter: blur(10px);
         }
         
@@ -115,16 +113,43 @@
             font-size: 0.875rem;
             margin-top: 0.25rem;
         }
+        
+        /* Decorative elements */
+        .circuit-line {
+            position: absolute;
+            background-color: rgba(0, 255, 65, 0.1);
+            z-index: -1;
+        }
+        
+        .circuit-dot {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--matrix-green);
+            box-shadow: 0 0 10px var(--matrix-green);
+            z-index: -1;
+        }
     </style>
 </head>
-<body class="matrix-bg min-h-screen flex flex-col">
-    <!-- Matrix Digital Rain Canvas -->
-    <canvas id="matrix-rain" class="matrix-rain"></canvas>
+<body class="min-h-screen flex flex-col">
+    <!-- Decorative circuit board elements -->
+    <div class="circuit-line" style="top: 20%; left: 0; width: 30%; height: 1px;"></div>
+    <div class="circuit-line" style="top: 20%; left: 0; width: 1px; height: 30%;"></div>
+    <div class="circuit-dot" style="top: 20%; left: 30%;"></div>
+    
+    <div class="circuit-line" style="top: 70%; right: 0; width: 20%; height: 1px;"></div>
+    <div class="circuit-line" style="top: 40%; right: 20%; width: 1px; height: 30%;"></div>
+    <div class="circuit-dot" style="top: 70%; right: 20%;"></div>
+    
+    <div class="circuit-line" style="bottom: 30%; left: 10%; width: 15%; height: 1px;"></div>
+    <div class="circuit-line" style="bottom: 10%; left: 25%; width: 1px; height: 20%;"></div>
+    <div class="circuit-dot" style="bottom: 30%; left: 25%;"></div>
     
     <!-- Navigation Bar -->
-    <nav class="border-b matrix-border py-4 px-6 backdrop-filter backdrop-blur-lg bg-opacity-10 bg-black w-full">
+    <nav class="border-b matrix-border py-4 px-6 bg-black bg-opacity-80 w-full">
         <div class="container mx-auto">
-            <a href="/"class="text-2xl font-bold matrix-text matrix-glow">ByteHire</a>
+            <a href="/" class="text-2xl font-bold matrix-text matrix-glow">ByteHire</a>
         </div>
     </nav>
 
@@ -145,7 +170,7 @@
             <div id="auth-form-container">
                 <!-- Login Form (Default) -->
                 <form id="login-form" action="/login" method="post">
-                    <h2 class="text-2xl font-bold matrix-text matrix-glow mb-6 text-center">Access the Network</h2>
+                    <h2 class="text-2xl font-bold matrix-text matrix-glow mb-6 text-center">Access Your Account</h2>
                     
                     <div class="mb-6">
                         <label for="login-email" class="block matrix-text mb-2">Email</label>
@@ -182,7 +207,7 @@
                     </div>
                     
                     <button type="submit" class="w-full border-2 matrix-border matrix-text py-3 rounded-md hover:matrix-glow hover:matrix-box-shadow transition duration-300 text-lg">
-                        Enter the Matrix
+                        Login
                     </button>
                     
                     <div class="mt-6 text-center">
@@ -196,7 +221,7 @@
 
                 <!-- Sign Up Form (Hidden by default) -->
                 <form id="signup-form" action="/signup" method="post" style="display: none;">
-                    <h2 class="text-2xl font-bold matrix-text matrix-glow mb-6 text-center">Join the Network</h2>
+                    <h2 class="text-2xl font-bold matrix-text matrix-glow mb-6 text-center">Create Your Account</h2>
                     
                     <div class="mb-6">
                         <label for="signup-username" class="block matrix-text mb-2">Username</label>
@@ -205,7 +230,7 @@
                             id="signup-username" 
                             name="username" 
                             class="matrix-input" 
-                            placeholder="hackerman" 
+                            placeholder="username" 
                             required
                         >
                         <div class="error-message"></div>
@@ -237,18 +262,7 @@
                         <div class="error-message"></div>
                     </div>
                     
-                    <div class="mb-6">
-                        <label for="signup-confirm-password" class="block matrix-text mb-2">Confirm Password</label>
-                        <input 
-                            type="password" 
-                            id="signup-confirm-password" 
-                            name="confirm_password" 
-                            class="matrix-input" 
-                            placeholder="••••••••" 
-                            required
-                        >
-                        <div class="error-message"></div>
-                    </div>
+           
                     
                     <div class="mb-6">
                         <label class="block matrix-text mb-2">I am a</label>
@@ -294,7 +308,7 @@
     </div>
 
     <!-- Footer -->
-    <footer class="py-6 px-6 border-t matrix-border">
+    <footer class="py-6 px-6 border-t matrix-border bg-black bg-opacity-80">
         <div class="container mx-auto text-center">
             <div class="matrix-dark-text text-sm">
                 &copy; 2025 ByteHire. All rights reserved.
@@ -303,60 +317,6 @@
     </footer>
 
     <script>
-        // Matrix Digital Rain Effect
-        document.addEventListener('DOMContentLoaded', function() {
-            const canvas = document.getElementById('matrix-rain');
-            const ctx = canvas.getContext('2d');
-            
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            
-            const matrixGreen = '#00ff41';
-            const characters = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-            const fontSize = 14;
-            const columns = canvas.width / fontSize;
-            
-            const drops = [];
-            for (let i = 0; i < columns; i++) {
-                drops[i] = Math.floor(Math.random() * -100);
-            }
-            
-            function draw() {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                ctx.fillStyle = matrixGreen;
-                ctx.font = fontSize + 'px monospace';
-                
-                for (let i = 0; i < drops.length; i++) {
-                    const text = characters.charAt(Math.floor(Math.random() * characters.length));
-                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                    
-                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                        drops[i] = 0;
-                    }
-                    
-                    drops[i]++;
-                }
-            }
-            
-            setInterval(draw, 33);
-            
-            // Resize canvas when window is resized
-            window.addEventListener('resize', function() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                
-                const newColumns = canvas.width / fontSize;
-                
-                if (newColumns > drops.length) {
-                    for (let i = drops.length; i < newColumns; i++) {
-                        drops[i] = Math.floor(Math.random() * -100);
-                    }
-                }
-            });
-        });
-
         // Form switching functionality
         const loginTab = document.getElementById('login-tab');
         const signupTab = document.getElementById('signup-tab');
@@ -395,15 +355,56 @@
         });
 
         // Form validation
-        document.getElementById('signup-form').addEventListener('submit', function(e) {
-            const password = document.getElementById('signup-password').value;
-            const confirmPassword = document.getElementById('signup-confirm-password').value;
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
             
-            if (password !== confirmPassword) {
-                e.preventDefault();
-                document.querySelector('#signup-confirm-password + .error-message').textContent = 'Passwords do not match';
-            }
-        });
+            console.log('started it')
+
+            e.preventDefault()
+
+        
+            const username = document.getElementById('signup-username').value
+
+            
+            const email = document.getElementById('signup-email').value
+            
+            const password = document.getElementById('signup-password').value;
+            
+            const role = document.getElementById('user-type-developer').value
+
+
+            console.log(role)
+
+            const response = await fetch('/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({username, password, email, role})
+            })
+
+                const data = await response.json()
+
+                if (response.ok) {
+                    alert('Account created successfully now Sign IN!');
+
+                }
+                else {
+                    alert(`error: ${data.message}`)
+                }
+            });
+
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            preventDefault(e)
+
+                        
+            const email = document.getElementById('signup-email').value
+
+            const password = document.getElementById('signup-password').value;
+
+
+
+        })
 
         // User type selection
         const clientOption = document.getElementById('client-option');

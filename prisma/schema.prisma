@@ -7,6 +7,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum Role {
+  client
+  developer
+  admin
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   username  String   @unique
@@ -14,14 +20,16 @@ model User {
   password  String
   createdAt DateTime @default(now())
 
+  role Role
+
   publicKey String   @unique
   privateKey String  @unique
 
-  privateKeySalt    String   // Add this line
-  privateKeyIV      String   // Add this line
-  privateKeyAuthTag String   // Add this line
 
 
+  Gig Gig[]
+
+  Transaction Transaction[]
 }
 
 
@@ -47,8 +55,8 @@ model Transaction {
   id          Int      @id @default(autoincrement())
   buyerId     Int   
   buyer       User     @relation(fields: [buyerId], references: [id])  
-  productId   Int      @unique
-  product     Product  @relation(fields: [productId], references: [id])
+  gigId   Int      @unique
+  gig     Gig  @relation(fields: [gigId], references: [id])
   escrowAddress  String
   releaseConfirmed Boolean @default(false)
   status      String
@@ -68,5 +76,5 @@ model Escrow {
   status      String @default("pending") // pending, shipped, released, disputed
   createdAt   DateTime @default(now())
 
-  Product Product[]
+  Gig Gig[]
 }
