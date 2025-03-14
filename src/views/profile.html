@@ -582,314 +582,177 @@
             }
         })
 
-
-        // Fetch profile data
         async function fetchProfileData() {
-            try {
-                // In a real app, this would be a call to your backend API
-                // For now, we'll simulate a fetch with a timeout
-                const response = await new Promise(resolve => {
-                    setTimeout(() => {
-                        resolve({
-                            ok: true,
-                            json: () => Promise.resolve({
-                                name: "Alex Johnson",
-                                image: "https://api.dicebear.com/7.x/identicon/svg?seed=ByteHire",
-                                rating: 4.8,
-                                focus: ["Full Stack Developer", "Backend Specialist"],
-                                description: "Experienced developer with 5+ years of expertise in building scalable web applications and APIs.",
-                                location: "San Francisco, CA",
-                                memberSince: "March 2023",
-                                completedProjects: "28 Projects Completed",
-                                about: "I'm a passionate developer who loves creating elegant solutions to complex problems. With a strong background in both frontend and backend technologies, I specialize in building full-stack applications that are both performant and user-friendly. I'm particularly interested in blockchain technology and decentralized applications.",
-                                experience: [
-                                    {
-                                        title: "Senior Developer",
-                                        company: "TechCorp Inc.",
-                                        period: "2021 - Present",
-                                        description: "Lead developer for enterprise-level applications, managing a team of 5 developers."
-                                    },
-                                    {
-                                        title: "Full Stack Developer",
-                                        company: "WebSolutions LLC",
-                                        period: "2018 - 2021",
-                                        description: "Developed and maintained multiple client websites and web applications."
-                                    }
-                                ],
-                                education: [
-                                    {
-                                        institution: "University of Technology",
-                                        degree: "Master's in Computer Science",
-                                        period: "2016 - 2018",
-                                        description: "Specialized in Distributed Systems and Cloud Computing"
-                                    },
-                                    {
-                                        institution: "Tech Institute",
-                                        degree: "Bachelor's in Software Engineering",
-                                        period: "2012 - 2016",
-                                        description: "Graduated with honors, GPA 3.8/4.0"
-                                    }
-                                ],
-                                technicalSkills: [
-                                    { name: "JavaScript", level: 95 },
-                                    { name: "Node.js", level: 90 },
-                                    { name: "React", level: 85 },
-                                    { name: "Python", level: 80 },
-                                    { name: "SQL", level: 85 }
-                                ],
-                                softSkills: [
-                                    { name: "Communication", level: 90 },
-                                    { name: "Problem Solving", level: 95 },
-                                    { name: "Team Leadership", level: 85 },
-                                    { name: "Time Management", level: 80 }
-                                ],
-                                languages: ["JavaScript", "Python", "TypeScript", "SQL", "HTML/CSS", "Solidity"],
-                                frameworks: ["React", "Node.js", "Express", "Django", "Next.js", "TailwindCSS"],
-                                portfolio: [
-                                    {
-                                        title: "Decentralized Exchange",
-                                        description: "A fully functional DEX built on Ethereum with advanced trading features",
-                                        image: "https://api.dicebear.com/7.x/identicon/svg?seed=Project1",
-                                        tags: ["Blockchain", "Solidity", "React", "Web3.js"]
-                                    },
-                                    {
-                                        title: "E-commerce Platform",
-                                        description: "Full-stack e-commerce solution with payment processing and inventory management",
-                                        image: "https://api.dicebear.com/7.x/identicon/svg?seed=Project2",
-                                        tags: ["Node.js", "React", "MongoDB", "Stripe API"]
-                                    },
-                                    {
-                                        title: "AI Content Generator",
-                                        description: "Content generation tool powered by machine learning algorithms",
-                                        image: "https://api.dicebear.com/7.x/identicon/svg?seed=Project3",
-                                        tags: ["Python", "TensorFlow", "Flask", "React"]
-                                    }
-                                ],
-                                reviews: [
-                                    {
-                                        client: "Sarah Williams",
-                                        clientImage: "https://api.dicebear.com/7.x/identicon/svg?seed=Client1",
-                                        rating: 5,
-                                        date: "February 15, 2025",
-                                        text: "Alex delivered exceptional work on our blockchain project. The code was clean, well-documented, and delivered ahead of schedule. Would definitely hire again!"
-                                    },
-                                    {
-                                        client: "Michael Chen",
-                                        clientImage: "https://api.dicebear.com/7.x/identicon/svg?seed=Client2",
-                                        rating: 5,
-                                        date: "January 3, 2025",
-                                        text: "Outstanding developer who goes above and beyond. Alex not only completed the project but also provided valuable insights that improved our overall architecture."
-                                    },
-                                    {
-                                        client: "Jessica Rodriguez",
-                                        clientImage: "https://api.dicebear.com/7.x/identicon/svg?seed=Client3",
-                                        rating: 4,
-                                        date: "December 10, 2024",
-                                        text: "Great communication and technical skills. The only reason for 4 stars instead of 5 is that we had a slight delay in the project timeline, but the quality of work was excellent."
-                                    }
-                                ]
-                            })
-                        });
-                    }, 500);
-                });
-                
-                const data = await response.json();
-                
-                // Update profile header
-                document.getElementById('profile-image').src = data.image;
-                document.getElementById('profile-name').textContent = data.name;
-                document.getElementById('profile-rating').textContent = data.rating;
-                
-                // Clear and update focus areas
-                const focusContainer = document.getElementById('profile-focus').parentElement;
-                focusContainer.innerHTML = '';
-                data.focus.forEach(focus => {
-                    const span = document.createElement('span');
-                    span.className = 'px-3 py-1 rounded-full bg-green-900 bg-opacity-30 text-sm matrix-text';
-                    span.textContent = focus;
-                    focusContainer.appendChild(span);
-                });
-                
-                document.getElementById('profile-description').textContent = data.description;
-                document.getElementById('profile-location').textContent = data.location;
-                document.getElementById('profile-member-since').textContent = `Member since ${data.memberSince}`;
-                document.getElementById('profile-completed-projects').textContent = data.completedProjects;
-                
-                // Update about section
-                document.getElementById('profile-about').textContent = data.about;
-                
-                // Update experience
-                const experienceList = document.getElementById('experience-list');
-                experienceList.innerHTML = '';
-                data.experience.forEach(exp => {
-                    experienceList.innerHTML += `
-                        <div class="flex items-start space-x-4 pb-4 border-b matrix-border">
-                            <div class="w-12 h-12 rounded-md bg-black bg-opacity-50 flex items-center justify-center border matrix-border flex-shrink-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 matrix-text" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h4 class="matrix-text font-medium">${exp.title}</h4>
-                                <p class="matrix-dark-text text-sm">${exp.company} | ${exp.period}</p>
-                                <p class="matrix-dark-text text-sm mt-2">${exp.description}</p>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                // Update education
-                const educationList = document.getElementById('education-list');
-                educationList.innerHTML = '';
-                data.education.forEach(edu => {
-                    educationList.innerHTML += `
-                        <div class="flex items-start space-x-4">
-                            <div class="w-12 h-12 rounded-md bg-black bg-opacity-50 flex items-center justify-center border matrix-border flex-shrink-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 matrix-text" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path d="M12 14l9-5-9-5-9 5 9 5z" />
-                                    <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h4 class="matrix-text font-medium">${edu.degree}</h4>
-                                <p class="matrix-dark-text text-sm">${edu.institution} | ${edu.period}</p>
-                                <p class="matrix-dark-text text-sm mt-2">${edu.description}</p>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                // Update technical skills
-                const technicalSkillsList = document.querySelector('#skills-tab .space-y-4:first-of-type');
-                technicalSkillsList.innerHTML = '';
-                data.technicalSkills.forEach(skill => {
-                    technicalSkillsList.innerHTML += `
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="matrix-text">${skill.name}</span>
-                                <span class="matrix-text">${skill.level}%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: ${skill.level}%"></div>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                // Update soft skills
-                const softSkillsList = document.querySelector('#skills-tab .space-y-4:last-of-type');
-                softSkillsList.innerHTML = '';
-                data.softSkills.forEach(skill => {
-                    softSkillsList.innerHTML += `
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="matrix-text">${skill.name}</span>
-                                <span class="matrix-text">${skill.level}%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: ${skill.level}%"></div>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                // Update languages
-                const languagesList = document.getElementById('languages-list');
-                languagesList.innerHTML = '';
-                data.languages.forEach(language => {
-                    const span = document.createElement('span');
-                    span.className = 'px-3 py-1 rounded-full bg-green-900 bg-opacity-30 text-sm matrix-text';
-                    span.textContent = language;
-                    languagesList.appendChild(span);
-                });
-                
-                // Update frameworks
-                const frameworksList = document.getElementById('frameworks-list');
-                frameworksList.innerHTML = '';
-                data.frameworks.forEach(framework => {
-                    const span = document.createElement('span');
-                    span.className = 'px-3 py-1 rounded-full bg-green-900 bg-opacity-30 text-sm matrix-text';
-                    span.textContent = framework;
-                    frameworksList.appendChild(span);
-                });
-                
-                // Update portfolio
-                const portfolioList = document.getElementById('portfolio-list');
-                portfolioList.innerHTML = '';
-                data.portfolio.forEach(project => {
-                    let tagsHtml = '';
-                    project.tags.forEach(tag => {
-                        tagsHtml += `<span class="px-2 py-1 rounded-full bg-green-900 bg-opacity-30 text-xs matrix-text">${tag}</span>`;
-                    });
-                    
-                    portfolioList.innerHTML += `
-                        <div class="profile-card project-card overflow-hidden">
-                            <div class="h-48 bg-black bg-opacity-50 flex items-center justify-center">
-                                <img src="${project.image}" alt="${project.title}" class="w-full h-full object-cover">
-                            </div>
-                            <div class="p-4">
-                                <h3 class="matrix-text font-medium mb-2">${project.title}</h3>
-                                <p class="matrix-dark-text text-sm mb-3">${project.description}</p>
-                                <div class="flex flex-wrap gap-2">
-                                    ${tagsHtml}
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                // Update reviews
-                document.getElementById('reviews-rating').textContent = data.rating;
-                
-                const reviewsList = document.getElementById('reviews-list');
-                reviewsList.innerHTML = '';
-                data.reviews.forEach(review => {
-                    let starsHtml = '';
-                    for (let i = 1; i <= 5; i++) {
-                        if (i <= review.rating) {
-                            starsHtml += '<span class="star filled">★</span>';
-                        } else {
-                            starsHtml += '<span class="star">★</span>';
-                        }
-                    }
-                    
-                    reviewsList.innerHTML += `
-                        <div class="flex flex-col md:flex-row gap-4 pb-6 border-b matrix-border">
-                            <div class="flex-shrink-0">
-                                <div class="w-16 h-16 rounded-full overflow-hidden profile-pic">
-                                    <img src="${review.clientImage}" alt="${review.client}" class="w-full h-full object-cover">
-                                </div>
-                            </div>
-                            <div class="flex-grow">
-                                <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
-                                    <div>
-                                        <h4 class="matrix-text font-medium">${review.client}</h4>
-                                        <div class="flex items-center">
-                                            <div class="star-rating mr-2">
-                                                ${starsHtml}
-                                            </div>
-                                            <span class="matrix-dark-text text-sm">${review.rating}.0</span>
-                                        </div>
-                                    </div>
-                                    <span class="matrix-dark-text text-sm mt-2 md:mt-0">${review.date}</span>
-                                </div>
-                                <p class="matrix-dark-text">${review.text}</p>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-            } catch (error) {
-                console.error('Error fetching profile data:', error);
-                // Display error message to user
-                document.getElementById('profile-name').textContent = 'Error loading profile';
-                document.getElementById('profile-description').textContent = 'There was an error loading the profile data. Please try again later.';
-            }
+    try {
+        const response = await fetch('/profiledata'); // Fetch data from /profiledata
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
-        // Call the function when the page loads
-        document.addEventListener('DOMContentLoaded', fetchProfileData);
+        const data = await response.json(); // Parse the JSON data
+
+        // Update profile header
+        document.getElementById('profile-image').src = data.image;
+        document.getElementById('profile-name').textContent = data.name;
+        document.getElementById('profile-rating').textContent = data.rating;
+
+        // Clear and update focus areas
+        const focusContainer = document.getElementById('profile-focus').parentElement;
+        focusContainer.innerHTML = '';
+        data.focus.forEach(focus => {
+            const span = document.createElement('span');
+            span.className = 'px-3 py-1 rounded-full bg-green-900 bg-opacity-30 text-sm matrix-text';
+            span.textContent = focus;
+            focusContainer.appendChild(span);
+        });
+
+        document.getElementById('profile-description').textContent = data.description;
+        document.getElementById('profile-location').textContent = data.location;
+        document.getElementById('profile-member-since').textContent = `Member since ${data.memberSince}`;
+        document.getElementById('profile-completed-projects').textContent = data.completedProjects;
+
+        // Update about section
+        document.getElementById('profile-about').textContent = data.about;
+
+        // Update experience
+        const experienceList = document.getElementById('experience-list');
+        experienceList.innerHTML = '';
+        data.experience.forEach(exp => {
+            experienceList.innerHTML += `
+                <div class="flex items-start space-x-4 pb-4 border-b matrix-border">
+                    <div class="w-12 h-12 rounded-md bg-black bg-opacity-50 flex items-center justify-center border matrix-border flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 matrix-text" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="matrix-text font-medium"><span class="math-inline">\{exp\.title\}</h4\>
+<p class\="matrix\-dark\-text text\-sm"\></span>{exp.company}</p>
+                        <p class="matrix-dark-text text-sm mt-2">${exp.period}</p>
+                    </div>
+                </div>
+            `;
+        });
+        // similiar changes to the rest of the data.
+        //skills
+        const technicalSkillsList = document.querySelector('#skills-list div:nth-child(1) .space-y-4');
+        technicalSkillsList.innerHTML = '';
+        data.technicalSkills.forEach(skill => {
+            technicalSkillsList.innerHTML += `
+            <div>
+                <div class="flex justify-between mb-1">
+                    <span class="matrix-text"><span class="math-inline">\{skill\.name\}</span\>
+<span class\="matrix\-text"\></span>{skill.level}%</span>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-progress" style="width: ${skill.level}%"></div>
+                </div>
+            </div>
+            `;
+        });
+        const softSkillsList = document.querySelector('#skills-list div:nth-child(2) .space-y-4');
+        softSkillsList.innerHTML = '';
+        data.softSkills.forEach(skill => {
+            softSkillsList.innerHTML += `
+            <div>
+                <div class="flex justify-between mb-1">
+                    <span class="matrix-text"><span class="math-inline">\{skill\.name\}</span\>
+<span class\="matrix\-text"\></span>{skill.level}%</span>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-progress" style="width: ${skill.level}%"></div>
+                </div>
+            </div>
+            `;
+        });
+        const languagesList = document.getElementById('languages-list');
+        languagesList.innerHTML = '';
+        data.languages.forEach(language => {
+            languagesList.innerHTML += `<span class="px-3 py-1 rounded-full bg-green-900 bg-opacity-30 text-sm matrix-text">${language}</span>`;
+        });
+        const frameworksList = document.getElementById('frameworks-list');
+        frameworksList.innerHTML = '';
+        data.frameworks.forEach(framework => {
+            frameworksList.innerHTML += `<span class="px-3 py-1 rounded-full bg-green-900 bg-opacity-30 text-sm matrix-text">${framework}</span>`;
+        });
+        //portfolio
+        const portfolioList = document.getElementById('portfolio-list');
+        portfolioList.innerHTML = '';
+        data.portfolio.forEach(project => {
+            portfolioList.innerHTML += `
+            <div class="profile-card project-card overflow-hidden">
+                <div class="h-48 bg-black bg-opacity-50 flex items-center justify-center">
+                    <img src="<span class="math-inline">\{project\.image\}" alt\="</span>{project.title}" class="w-full h-full object-cover">
+                </div>
+                <div class="p-4">
+                    <h3 class="matrix-text font-medium mb-2"><span class="math-inline">\{project\.title\}</h3\>
+<p class\="matrix\-dark\-text text\-sm mb\-3"\></span>{project.description}</p>
+                    <div class="flex flex-wrap gap-2">
+                        ${project.tags.map(tag => `<span class="px-2 py-1 rounded-full bg-green-900 bg-opacity-30 text-xs matrix-text">${tag}</span>`).join('')}
+                    </div>
+                </div>
+            </div>
+            `;
+        });
+        //reviews
+        const reviewsList = document.getElementById('reviews-list');
+        reviewsList.innerHTML = '';
+        data.reviews.forEach(review => {
+            reviewsList.innerHTML += `
+            <div class="flex flex-col md:flex-row gap-4 pb-6 border-b matrix-border">
+                <div class="flex-shrink-0">
+                    <div class="w-16 h-16 rounded-full overflow-hidden profile-pic">
+                        <img src="<span class="math-inline">\{review\.clientImage\}" alt\="</span>{review.client}" class="w-full h-full object-cover">
+                    </div>
+                </div>
+                <div class="flex-grow">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
+                        <div>
+                            <h4 class="matrix-text font-medium">${review.client}</h4>
+                            <div class="flex items-center">
+                                <div class="star-rating mr-2">
+                                    ${Array(review.rating).fill('<span class="star filled">★</span>').join('')}
+                                    ${Array(5 - review.rating).fill('<span class="star">★</span>').join('')}
+                                </div>
+                                <span class="matrix-dark-text text-sm">(${review.rating}.0)</span>
+                            </div>
+                        </div>
+                        <span class="matrix-dark-text text-sm mt-2 md:mt-0">${review.date}</span>
+                    </div>
+                    <p class="matrix-dark-text">${review.text}</p>
+                </div>
+            </div>
+            `;
+        });
+        document.getElementById('reviews-rating').textContent = data.rating;
+        //education
+        const educationList = document.getElementById('education-list');
+        educationList.innerHTML = '';
+        data.education.forEach(edu => {
+            educationList.innerHTML += `
+            <div class="flex items-start space-x-4">
+                <div class="w-12 h-12 rounded-md bg-black bg-opacity-50 flex items-center justify-center border matrix-border flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 matrix-text" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                        <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+                    </svg>
+                </div>
+                <div>
+                    <h4 class="matrix-text font-medium">${edu.institution}</h4>
+                    <p class="matrix-dark-text text-sm">${edu.degree}</p>
+                    <p class="matrix-dark-text text-sm mt-2">${edu.period}</p>
+                </div>
+            </div>
+            `;
+        });
+    } catch (error) {
+        console.error('Error fetching profile data:', error);
+        // Handle errors (e.g., display a message to the user)
+    }
+}
+
+// Call the function to fetch and populate data
+fetchProfileData();
     </script>
 </body>
 </html>
