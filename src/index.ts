@@ -222,6 +222,7 @@ app.post('/login', async (req: { body: { password: any; email: any; }; }, res: {
 
 // Logout route
 app.post('/logout', (req: any, res: { clearCookie: (arg0: string) => void; status: (arg0: number) => { (): any; new(): any; json: { (arg0: { message: string; }): void; new(): any; }; }; }) => {
+ console.log('started the logout')
   res.clearCookie('auth_token');  // Remove the token cookie
   res.status(200).json({ message: 'Logged out successfully' });
 });

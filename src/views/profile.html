@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ByteHire - Profile</title>
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
-    <script src="https://unpkg.com/htmx.org@1.9.0"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap');
         
@@ -309,11 +309,10 @@
                                 <button class="border-2 matrix-border matrix-text px-4 py-2 rounded-md hover:matrix-glow hover:matrix-box-shadow transition duration-300">
                                     Edit Profile
                                 </button>
-                                <button type="button" class="border-2 matrix-border matrix-text px-4 py-2 rounded-md hover:matrix-glow hover:matrix-box-shadow transition duration-300"     hx-get="/logout" 
-                                hx-target="body" 
-                                hx-swap="outerHTML">
+                                <button id="logout-button" type="button" class="border-2 matrix-border matrix-text px-4 py-2 rounded-md hover:matrix-glow hover:matrix-box-shadow transition duration-300">
                                     Log out
                                 </button>
+                                
                             </div>
                         </div>
                         <p id="profile-description" class="matrix-dark-text mb-4">Loading...</p>
@@ -560,7 +559,7 @@
         });
         
 
-        document.getElementById('logout-button').addEventListener('submit', async (e) => {
+        document.getElementById('logout-button').addEventListener('click', async (e) => {
             console.log('loging out')
             e.preventDefault()
 
@@ -574,7 +573,7 @@
             const data = await response.json()
 
             if (response.ok) {
-                window.location.href = '/login';
+                window.location.href = '/signup';
                 alert('Loged out!');
 
             }
